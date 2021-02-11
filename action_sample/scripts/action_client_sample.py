@@ -6,7 +6,7 @@
 #ROS関係ライブラリ
 import rospy #ROSをpythonで使用するのに必要
 import actionlib #アクション通信を使用するのに必要
-from action_sample.msg import action_fileAction, action_fileGoal #メッセージファイルの読み込み（from パッケージ名.msg import 拡張子なしアクションメッセージファイル名）。actionフォルダで定義した「アクションファイル名.action」ファイルを作成し、catkin_makeすると、「アクションファイル名Action.msg」、「アクションファイル名Feedback.msg」、「アクションファイル名ActionFeedback.msg」、「アクションファイル名Goal.msg」、「アクションファイル名ActionGoal.msg」、「アクションファイル名Result.msg」、「アクションファイル名ActionResult.msg」が生成される。生成されたアクションメッセージファイルは、「ls /home/limlab/catkin_ws/devel/share/パッケージ名/msg」コマンドで確認できる。アクションサーバ側は、「アクションファイル名Action.msg」、「アクションファイル名Result.msg」（途中経過が必要な場合は、「アクションファイル名Feedback.msg」）をインポートする。「アクションファイル名Goal.msg」は、アクションクライアントからリクエストがあった場合に呼び出されるコールバック関数の引数として取得できるため、アクションサーバ側は必要ない。アクションクライアント側は、「アクションファイル名Action.msg」、「アクションファイル名Goal.msg」（途中経過が必要な場合は、「アクションファイル名Feedback.msg」）をインポートする
+from action_sample.msg import action_fileAction, action_fileGoal #メッセージファイルの読み込み（from パッケージ名.msg import 拡張子なしアクションメッセージファイル名）。actionフォルダで定義した「アクションファイル名.action」ファイルを作成し、catkin_makeすると、「アクションファイル名Action.msg」、「アクションファイル名Feedback.msg」、「アクションファイル名ActionFeedback.msg」、「アクションファイル名Goal.msg」、「アクションファイル名ActionGoal.msg」、「アクションファイル名Result.msg」、「アクションファイル名ActionResult.msg」が生成される。生成されたアクションメッセージファイルは、「ls /home/limlab/catkin_ws/devel/share/パッケージ名/msg」コマンドで確認できる。アクションクライアント側は、「アクションファイル名Action.msg」、「アクションファイル名Goal.msg」（途中経過が必要な場合は、「アクションファイル名Feedback.msg」）をインポートする
 
 
 
@@ -23,15 +23,15 @@ class Action_Client(): #アクションクライアントのクラス
 
 
     def request_result(self): #アクション結果（Result）のリクエスト
-        rospy.loginfo("アクション結果の待機中")
+        rospy.loginfo("アクション結果の待機中") #ログの表示
         self.action_client.wait_for_result(rospy.Duration(30)) #結果が返ってくるまで30秒待機。ここで処理が一時停止（ブロッキング）する
         result = self.action_client.get_result() # アクションサーバの「アクションサーバ.set_succeeded(アクション結果)」によって返されたアクション結果を取得
-        rospy.loginfo("アクション結果:{}".format(result.action_tf))
+        rospy.loginfo("アクション結果:{}".format(result.action_tf)) #ログの表示
 
 
 
     def request_action_service(self): #アクションサービスのリクエスト
-        rospy.loginfo("アクションサーバとの接続待機中")
+        rospy.loginfo("アクションサーバとの接続待機中") #ログの表示
         self.action_client.wait_for_server(rospy.Duration(15)) #アクションサーバーが起動するまで待機。15秒でタイムアウト
 
         try: #サーバとの接続ができた場合
