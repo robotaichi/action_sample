@@ -12,7 +12,8 @@ from action_sample.msg import action_fileAction, action_fileResult #メッセー
 
 class Action_Server(): #アクションサーバのクラス
     def __init__(self):
-        self.rate = rospy.Rate(0.1) #1秒間に0.1回
+        self.rate1 = rospy.Rate(1) # 1秒間に1回（1Hz)
+        self.rate2 = rospy.Rate(0.1) #1秒間に0.1回
         self.result = action_fileResult() #アクション結果（Result）のインスタンス生成
         self.action_server = actionlib.SimpleActionServer('action_service_name', action_fileAction, execute_cb = self.action_callback, auto_start = False) #アクションサーバのインスタンス生成
         self.action_server.start() #アクションサーバーのスタート（サービス通信と違って、自動起動をFalseにした場合はこの開始処理が必要）
@@ -26,7 +27,10 @@ class Action_Server(): #アクションサーバのクラス
 
     def action_callback(self, goal): #アクションサービスがリクエストされると呼び出されるコールバック関数
         rospy.loginfo("アクション目標の受信：{}".format(goal.text)) #ログの表示
-        self.rate.sleep() #待機
+        for i in reversed(range(10)):
+            rospy.loginfo("{}".format(i)) #ログの表示
+            self.rate1.sleep() #待機
+        self.rate2.sleep() #待機
         self.make_result() #アクション結果（Result）の作成
         self.action_server.set_succeeded(self.result) #アクション結果をアクションクライアントに返す（アクション結果の送信）。ここでは、定義したアクション結果（Result）のインスタンスを引数に指定すること。アクションクライアント側は、「アクションクライアント名.wait_for_result(タイムアウト時間)」で接続待機し、「result = アクションクライアント名.get_result()」でアクション結果を取得
         rospy.loginfo("アクション結果の送信完了") #ログの表示

@@ -14,6 +14,7 @@ class Action_Client(): #アクションクライアントのクラス
     def __init__(self):
         self.goal = action_fileGoal() #アクション目標（Goal）のインスタンス生成
         self.action_client = actionlib.SimpleActionClient('action_service_name', action_fileAction) #アクションクライアントのインスタンス生成
+        self.rate = rospy.Rate(1) # 1秒間に1回（1Hz)
 
 
 
@@ -38,6 +39,9 @@ class Action_Client(): #アクションクライアントのクラス
             self.make_goal() #メッセージの作成
             self.action_client.send_goal(self.goal) #アクションサーバにアクション目標（Goal）を送信。ここでは、定義したアクション目標（Goal）のインスタンスを引数に指定すること。アクション目標（Goal）を送信した時点でアクションサーバが起動（動作開始）し、アクションクライアントも次の処理を実行する（並列処理になる）
             rospy.loginfo("アクション目標の送信:{}".format(self.goal.text)) #ログの表示
+            for i in range(10):
+                rospy.loginfo("{}".format(i)) #ログの表示
+                self.rate.sleep() #待機
             self.request_result() #アクション結果（Result）のリクエスト
 
         except rospy.ServiceException: #サーバとの接続ができなかった場合
